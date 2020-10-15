@@ -1,0 +1,15 @@
+version: '3'
+services:
+  redis:
+    image: 'redis'
+  app:
+    depends_on:
+      - redis
+    build:
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+      - '8088:8080'

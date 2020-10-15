@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @Controller
 public class MainController
 {
-    @GetMapping("/welcome")
+    @GetMapping("/adduser")
     public String welcome(@ModelAttribute("user") User user)
     {
-        if(user.getName() == null && user.getSurName() == null  && user.getAddress() == null)
+        if(user.getName() == null && user.getSurname() == null  && user.getAddress() == null)
         {
             user.setName("Dusan");
-            user.setSurName("Bernat");
+            user.setSurname("Bernat");
             user.setAddress("Bekstr. 11, 22880 Wedel");
         }
-        return "main/welcome";
+        return "main/adduser";
     }
 }

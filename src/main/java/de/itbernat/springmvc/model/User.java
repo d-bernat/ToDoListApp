@@ -1,13 +1,14 @@
 package de.itbernat.springmvc.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import org.springframework.data.redis.core.RedisHash;
 
-@Getter
-@Setter
+@Data
+@RedisHash("User")
 public class User
 {
+    private int id;
     private String name;
-    private String surName;
+    private String surname;
     private String address;
 }
