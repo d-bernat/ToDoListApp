@@ -44,7 +44,17 @@ public class ToDoData
 
     public ToDoItem getItem(final int id)
     {
-        return items.get(id);
+        ListIterator<ToDoItem> itemIterator = items.listIterator();
+        while(itemIterator.hasNext())
+        {
+            ToDoItem item =itemIterator.next();
+            if(item.getId() == id)
+            {
+                return item;
+            }
+        }
+
+        return null;
     }
 
     public void updateItem(@NonNull ToDoItem toUpdate)

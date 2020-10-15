@@ -3,6 +3,8 @@ package de.itbernat.springmvc.controller;
 import de.itbernat.springmvc.model.MetaInfo;
 import de.itbernat.springmvc.service.DemoService;
 import de.itbernat.springmvc.service.MetaInfoService;
+import de.itbernat.springmvc.utils.AttributeNames;
+import de.itbernat.springmvc.utils.Mappings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,15 +30,15 @@ public class DemoController
         this.metaInfoService = metaInfoService;
     }
 
-    @GetMapping("/welcome")
+    @GetMapping(Mappings.WELCOME_PATH)
     public String welcome(Model model, @RequestParam Optional<String> user)
     {
         model.addAttribute("helloMessage", demoService.getHelloMessage(user.orElse("Dusan")));
         log.info("model: {}", model);
-        return "main/welcome";
+        return Mappings.WELCOME_VIEW;
     }
 
-    @ModelAttribute("welcomeMessage")
+    @ModelAttribute(AttributeNames.WELCOME_MESSAGE_MODEL_ATTRIBUTE)
     public String welcomeMessage()
     {
         log.info("welcomeMessage() called");
@@ -45,7 +47,7 @@ public class DemoController
     }
 
 
-    @ModelAttribute("meta")
+    @ModelAttribute(AttributeNames.META_INFO_MODEL_ATTRIBUTE)
     public MetaInfo metaInfo()
     {
         log.info("metaInfo() called");

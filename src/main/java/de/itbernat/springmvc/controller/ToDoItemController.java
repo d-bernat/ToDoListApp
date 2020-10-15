@@ -3,16 +3,16 @@ package de.itbernat.springmvc.controller;
 import de.itbernat.springmvc.model.ToDoItem;
 import de.itbernat.springmvc.model.ToDoItemsWrapper;
 import de.itbernat.springmvc.service.ToDoDataService;
+import de.itbernat.springmvc.utils.AttributeNames;
+import de.itbernat.springmvc.utils.Mappings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,31 +29,55 @@ public class ToDoItemController
         this.toDoDataService = toDoDataService;
     }
 
-    @GetMapping("/items")
-    public String getItems(@ModelAttribute("itemsWrapper") ToDoItemsWrapper itemsWrapper)
+    @GetMapping(Mappings.TODO_ITEM_ITEMS_PATH)
+    public String getItems(@ModelAttribute(AttributeNames.ITEMS_MODEL_ATTRIBUTE) ToDoItemsWrapper itemsWrapper)
     {
         itemsWrapper.setItems(toDoDataService.getItems());
-        return "main/items";
+        return Mappings.TODO_ITEM_ITEMS_VIEW;
     }
 
-    @GetMapping("/additem")
-    public String editItem(@ModelAttribute("item") ToDoItem toDoItem)
+    @GetMapping(Mappings.TODO_ITEM_ADD_ITEM_PATH)
+    public String addItem(@RequestParam( required = false, defaultValue = "-1" ) int id,  @ModelAttribute(AttributeNames.ITEM_MODEL_ATTRIBUTE) ToDoItem toDoItem)
     {
-        return "main/additem";
+        log.info(toDoItem.toString());
+        if(id > 0)
+        {
+            ToDoItem item = toDoDataService.getItem(id);
+            toDoItem.setTitle(item.getTitle());
+            toDoItem.setDetails(item.getDetails());
+            toDoItem.setDeadline(item.getDeadline());
+        }
+        return Mappings.TODO_ITEM_ADD_ITEM_VIEW;
     }
 
-    @PostMapping("/additem")
-    public String addItem(@ModelAttribute("item") ToDoItem toDoItem, BindingResult bindingResult)
+    @PostMapping(Mappings.TODO_ITEM_ADD_ITEM_PATH)
+    public String addItem(@ModelAttribute(AttributeNames.ITEM_MODEL_ATTRIBUTE) ToDoItem toDoItem, BindingResult bindingResult)
     {
         if(bindingResult.hasErrors())
         {
-            return "redirect:/items";
+            log.error(bindingResult.toString());
+            return "redirect:" + Mappings.TODO_ITEM_ITEMS_PATH;
         }
-        toDoDataService.addItem(toDoItem);
-        return "redirect:/items";
+
+        if(toDoItem.getId() == 0 )
+        {
+            toDoDataService.addItem(toDoItem);
+        }
+        else
+        {
+            toDoDataService.updateItem(toDoItem);
+        }
+        return "redirect:" + Mappings.TODO_ITEM_ITEMS_PATH;
     }
 
-    @InitBinder("item")
+    @GetMapping(Mappings.TODO_ITEM_REMOVE_ITEM_PATH)
+    public String removeItem(@RequestParam int id)
+    {
+        toDoDataService.removeItem(id);
+        return "redirect:" + Mappings.TODO_ITEM_ITEMS_PATH;
+    }
+
+    @InitBinder(AttributeNames.ITEM_MODEL_ATTRIBUTE)
     public void initBinder(WebDataBinder dataBinder)
     {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");

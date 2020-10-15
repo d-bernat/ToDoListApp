@@ -1,4 +1,5 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ page  import="de.itbernat.springmvc.utils.AttributeNames" %>
 <%--
   Created by IntelliJ IDEA.
   User: dbernat
@@ -19,7 +20,7 @@
             <li>${user.address}</li>
         </ul>
         <br>
-        <form:form method="GET" action="/ToDoListApp/adduser" modelAttribute="user">
+        <form:form method="GET" modelAttribute="${AttributeNames.USER_MODEL_ATTRIBUTE}">
             <form:label path="name">Name</form:label>
             <form:input path="name" />
             <br>

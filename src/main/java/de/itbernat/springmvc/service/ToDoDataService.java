@@ -28,4 +28,18 @@ public class ToDoDataService
         toDoData.addItem(toDoItem);
     }
 
+    public void removeItem(int id)
+    {
+        toDoData.removeItem(id);
+    }
+
+    public ToDoItem getItem(int id)
+    {
+        return toDoData.getItem(id);
+    }
+
+    public void updateItem(ToDoItem toDoItem)
+    {
+        toDoData.updateItem(toDoItem);
+    }
 }
