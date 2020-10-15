@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -37,10 +36,10 @@ public class ToDoItemController
     }
 
     @GetMapping(Mappings.TODO_ITEM_ADD_ITEM_PATH)
-    public String addItem(@RequestParam( required = false, defaultValue = "-1" ) int id,  @ModelAttribute(AttributeNames.ITEM_MODEL_ATTRIBUTE) ToDoItem toDoItem)
+    public String addItem(@RequestParam(required = false, defaultValue = "-1") int id, @ModelAttribute(AttributeNames.ITEM_MODEL_ATTRIBUTE) ToDoItem toDoItem)
     {
         log.info(toDoItem.toString());
-        if(id > 0)
+        if (id > 0)
         {
             ToDoItem item = toDoDataService.getItem(id);
             toDoItem.setTitle(item.getTitle());
@@ -53,13 +52,13 @@ public class ToDoItemController
     @PostMapping(Mappings.TODO_ITEM_ADD_ITEM_PATH)
     public String addItem(@ModelAttribute(AttributeNames.ITEM_MODEL_ATTRIBUTE) ToDoItem toDoItem, BindingResult bindingResult)
     {
-        if(bindingResult.hasErrors())
+        if (bindingResult.hasErrors())
         {
             log.error(bindingResult.toString());
             return "redirect:" + Mappings.TODO_ITEM_ITEMS_PATH;
         }
 
-        if(toDoItem.getId() == 0 )
+        if (toDoItem.getId() == 0)
         {
             toDoDataService.addItem(toDoItem);
         }

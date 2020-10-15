@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,7 +22,7 @@ public class ToDoData
         addItem( new ToDoItem("first", "first details", Date.from(Instant.now())));
         addItem( new ToDoItem("second", "second details", Date.from(Instant.now())));
         addItem( new ToDoItem("third", "third details", Date.from(Instant.now())));
-        log.info(items.stream().map( item -> item.toString()).collect(Collectors.joining(";")));
+        log.info(items.stream().map(ToDoItem::toString).collect(Collectors.joining(";")));
     }
 
     public List<ToDoItem> getItems()
@@ -44,11 +43,9 @@ public class ToDoData
 
     public ToDoItem getItem(final int id)
     {
-        ListIterator<ToDoItem> itemIterator = items.listIterator();
-        while(itemIterator.hasNext())
+        for (ToDoItem item : items)
         {
-            ToDoItem item =itemIterator.next();
-            if(item.getId() == id)
+            if (item.getId() == id)
             {
                 return item;
             }

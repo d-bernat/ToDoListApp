@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Optional;
-
 @Slf4j
 @Controller
 public class DemoController
@@ -31,9 +29,9 @@ public class DemoController
     }
 
     @GetMapping(Mappings.WELCOME_PATH)
-    public String welcome(Model model, @RequestParam Optional<String> user)
+    public String welcome(Model model, @RequestParam(required = false, defaultValue = "Dusan") String user)
     {
-        model.addAttribute("helloMessage", demoService.getHelloMessage(user.orElse("Dusan")));
+        model.addAttribute("helloMessage", demoService.getHelloMessage(user));
         log.info("model: {}", model);
         return Mappings.WELCOME_VIEW;
     }
